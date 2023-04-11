@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { Post } from "../../Components/Post.js";
+import { Post } from "../../Components/Post";
 import { postsAll } from "../../assets/data.js";
 
 export const ProfileScreen = ({ navigation }) => {
@@ -46,11 +46,13 @@ export const ProfileScreen = ({ navigation }) => {
 
             {posts.map((item) => (
               <Post
+                key={item.id}
                 image={item.image}
                 text={item.text}
                 comments={item.comments}
                 likes={item.likes}
                 location={item.location}
+                navigation={navigation}
               />
             ))}
           </View>

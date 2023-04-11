@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,14 +8,31 @@ import {
 } from "react-native";
 import { Fontisto, SimpleLineIcons, Feather } from "@expo/vector-icons";
 
-export const Post = ({ image, text, comments, likes, location }) => {
+export const Post = ({
+  image,
+  text,
+  comments = "0",
+  likes = "0",
+  location,
+  navigation,
+}) => {
+  const [countLikes, setCountLikes] = useState(likes);
+
+  const addLikes = () => {
+    setCountLikes((prevState) => Number(prevState) + 1);
+  };
+  console.log(navigation);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={image} style={styles.image} />
       <Text style={styles.title}>{text}</Text>
       <View style={styles.boxInfo}>
         <View style={{ ...styles.boxLikes, alignItems: "center" }}>
-          <TouchableOpacity style={{ ...styles.button, marginRight: 27 }}>
+          <TouchableOpacity
+            style={{ ...styles.button, marginRight: 27 }}
+            onPress={() => navigation.navigate("Comments")}
+          >
             <View style={styles.iconWrap}>
               <Fontisto name="comment" size={18} color="#FF6C00" />
             </View>
@@ -22,16 +40,19 @@ export const Post = ({ image, text, comments, likes, location }) => {
             <Text style={styles.text}>{comments}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={addLikes}>
             <View style={styles.iconWrap}>
               <SimpleLineIcons name="like" size={18} color="#FF6C00" />
             </View>
 
-            <Text style={styles.text}>{likes}</Text>
+            <Text style={styles.text}>{countLikes}</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Map")}
+        >
           <View style={styles.iconWrap}>
             <Feather name="map-pin" size={24} color="#BDBDBD" />
           </View>

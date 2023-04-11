@@ -14,8 +14,8 @@ export const Routers = () => {
       initialRouteName="Lgin"
       screenOptions={{ headerShown: false }}
     >
-      <MainStack.Screen name="Register" component={RegistrationScreen} />
       <MainStack.Screen name="Login" component={LoginScreen} />
+      <MainStack.Screen name="Register" component={RegistrationScreen} />
 
       <MainStack.Screen name="Home" component={Home} />
     </MainStack.Navigator>
