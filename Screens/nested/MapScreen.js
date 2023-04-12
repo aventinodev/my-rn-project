@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import MapView, { Marker } from "react-native-maps";
 
-export const MapScreen = () => {
+const MapScreen = () => {
   return (
     <View style={styles.container}>
       <MapView
@@ -36,3 +36,5 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
+export default MapScreen;

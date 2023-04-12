@@ -28,24 +28,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    const locationName = Location.reverseGeocodeAsync();
-    console.log(photo.uri);
-    console.log("latitude", location.coords.latitude);
-    console.log("longitude", location.coords.longitude);
-    setPhoto(photo.uri);
-    setInputLocation(locationName);
-  };
-
-  const createPosts = () => {
-    // if (!state.name || !state.location)
-    //   Alert.alert("Please, enter all data");
-    //   return;
-    // }
-    navigation.navigate("DefaultScreen", { photo }, { title });
-  };
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -61,13 +43,33 @@ export const CreatePostsScreen = ({ navigation }) => {
       setLocation(coords);
     })();
   }, []);
-
+  // console.log(location);
   // let text = "Waiting..";
   // if (errorMsg) {
   //   text = errorMsg;
   // } else if (location) {
   //   text = JSON.stringify(location);
   // }
+
+  const takePhoto = async () => {
+    const photo = await camera.takePictureAsync();
+    const locationName = await Location.reverseGeocodeAsync(location);
+    console.log("locationName---->", locationName);
+    console.log("photo.uri---->", photo.uri);
+    // console.log("latitude", location.coords.latitude);
+    // console.log("longitude", location.coords.longitude);
+    setPhoto(photo.uri);
+    setInputLocation(locationName[0].street);
+    console.log("locationInput---->", locationName[0].street);
+  };
+
+  const createPosts = () => {
+    // if (!state.name || !state.location)
+    //   Alert.alert("Please, enter all data");
+    //   return;
+    // }
+    navigation.navigate("DefaultScreen", [photo, title, inputLocation]);
+  };
 
   return (
     <View style={styles.container}>

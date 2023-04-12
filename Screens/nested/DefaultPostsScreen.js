@@ -4,7 +4,7 @@ import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { Profile } from "../../Components/Profile";
 import { Post } from "../../Components/Post.js";
 
-export const DefaultScreenPosts = ({ navigation, route }) => {
+const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -44,3 +44,5 @@ const styles = StyleSheet.create({
     paddingTop: 32,
   },
 });
+
+export default DefaultScreenPosts;

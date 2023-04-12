@@ -21,7 +21,7 @@ export const Post = ({
   const addLikes = () => {
     setCountLikes((prevState) => Number(prevState) + 1);
   };
-  console.log(navigation);
+  // console.log(navigation);
 
   return (
     <View style={styles.container}>

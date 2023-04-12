@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export const CommentsScreen = () => {
+const CommentsScreen = () => {
   return (
     <View style={styles.container}>
       <Text>Comments Screen</Text>
@@ -16,3 +16,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default CommentsScreen;
