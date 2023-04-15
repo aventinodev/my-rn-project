@@ -10,6 +10,7 @@ import { Fontisto, SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 export const Post = ({
   image,
+  postId,
   text,
   comments = "0",
   likes = "0",
@@ -17,34 +18,26 @@ export const Post = ({
   navigation,
 }) => {
   const [countLikes, setCountLikes] = useState(likes);
-
   const addLikes = () => {
     setCountLikes((prevState) => Number(prevState) + 1);
   };
-  // console.log(navigation);
 
   return (
     <View style={styles.container}>
       <ImageBackground source={image} style={styles.image} />
       <Text style={styles.title}>{text}</Text>
       <View style={styles.boxInfo}>
-        <View style={{ ...styles.boxLikes, alignItems: "center" }}>
+        <View style={styles.boxLikes}>
           <TouchableOpacity
-            style={{ ...styles.button, marginRight: 27 }}
-            onPress={() => navigation.navigate("Comments")}
+            style={styles.button}
+            onPress={() => navigation.navigate("Comments", { image, postId })}
           >
-            <View style={styles.iconWrap}>
-              <Fontisto name="comment" size={18} color="#FF6C00" />
-            </View>
-
+            <Fontisto name="comment" size={24} color="#FF6C00" />
             <Text style={styles.text}>{comments}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={addLikes}>
-            <View style={styles.iconWrap}>
-              <SimpleLineIcons name="like" size={18} color="#FF6C00" />
-            </View>
-
+            <SimpleLineIcons name="like" size={24} color="#FF6C00" />
             <Text style={styles.text}>{countLikes}</Text>
           </TouchableOpacity>
         </View>
@@ -53,13 +46,8 @@ export const Post = ({
           style={styles.button}
           onPress={() => navigation.navigate("Map")}
         >
-          <View style={styles.iconWrap}>
-            <Feather name="map-pin" size={24} color="#BDBDBD" />
-          </View>
-
-          <Text style={{ ...styles.text, textDecorationLine: "underline" }}>
-            {location}
-          </Text>
+          <Feather name="map-pin" size={24} color="#BDBDBD" />
+          <Text style={styles.textLocation}>{location}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -81,12 +69,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     marginBottom: 8,
+    backgroundColor: "#212121",
   },
 
   title: {
     color: "#212121",
-    marginBottom: 11,
-    // fontWeight: 500,
+    marginBottom: 8,
+    fontWeight: 500,
     fontSize: 16,
   },
 
@@ -100,20 +89,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
     gap: 24,
-    alignItems: "center",
   },
 
   button: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "center",
-    gap: 9,
+    gap: 6,
   },
 
   text: {
     fontSize: 16,
-    marginRight: 9,
   },
 
-  iconWrap: { width: 24, height: 24, marginRight: 6 },
+  textLocation: {
+    fontSize: 16,
+    textDecorationLine: "underline",
+  },
 });

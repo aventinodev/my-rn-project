@@ -14,6 +14,10 @@ import {
   Dimensions,
 } from "react-native";
 
+import { useSelector, useDispatch } from "react-redux";
+import { loginUser, carrentuser } from "../../redux/auth/authOperations";
+import { selectIsLoggedIn } from "../../redux/auth/authSelectors";
+
 import { stylesForm } from "./StylesForm";
 
 const initialState = {
@@ -29,7 +33,7 @@ export const LoginScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [isOnFocus, setIsOnFocus] = useState(initialFocus);
   const [isShowPassword, setIsShowPassword] = useState(true);
-  const [logIn, setLogIn] = useState(false);
+  // const [logIn, setLogIn] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const [dimensions, setdimensions] = useState(
@@ -50,15 +54,24 @@ export const LoginScreen = ({ navigation }) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const onLogIn = () => {
+  const dispatch = useDispatch();
+
+  const onLogIn = async () => {
     if (!state.email || !state.password) {
       return Alert.alert("You should fill all the fields!");
     }
-    // Alert.alert(`email: ${state.email} \npassword: ${state.password}`);
-    setLogIn(true);
+
     setState(initialState);
     navigation.navigate("Home");
+
+    await dispatch(loginUser(state)).then((response) => {
+      response.meta.requestStatus === "fulfilled" &&
+        navigation.navigate("Home", { screen: "Posts" });
+      response.meta.requestStatus !== "fulfilled" &&
+        alert("Your data is wrong");
+    });
   };
 
   const handleFocus = (key) => {
@@ -99,14 +112,14 @@ export const LoginScreen = ({ navigation }) => {
               }}
             >
               <View style={{ ...stylesForm.wrap, overflow: "hidden" }}>
-                {logIn && (
+                {isLoggedIn && (
                   <Image
                     source={require("../../assets/images/avatar.jpg")}
                   ></Image>
                 )}
               </View>
-              <Text style={stylesForm.title}>Log In</Text>
 
+              <Text style={stylesForm.title}>Увійти</Text>
               <View style={{ width: "100%" }}>
                 <TextInput
                   style={{
@@ -146,7 +159,7 @@ export const LoginScreen = ({ navigation }) => {
                   onPress={() => handleShowPassword()}
                 >
                   <Text style={stylesForm.text}>
-                    {isShowPassword ? "Show" : "Hide"}
+                    {isShowPassword ? "Показати" : "Сховати"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -156,11 +169,11 @@ export const LoginScreen = ({ navigation }) => {
                 style={stylesForm.button}
                 onPress={onLogIn}
               >
-                <Text style={{ color: "#fff", lineHeight: 19 }}>Log in</Text>
+                <Text style={{ color: "#fff", lineHeight: 19 }}>Увійти</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("Register")}>
                 <Text style={stylesForm.text}>
-                  Don't have an account? Sign up
+                  Не маєте акаунта? Зареєструватися
                 </Text>
               </TouchableOpacity>
             </View>

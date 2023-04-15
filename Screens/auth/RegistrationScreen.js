@@ -13,8 +13,11 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
-
+import { useSelector, useDispatch } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
+
+import { registerUser } from "../../redux/auth/authOperations";
+import { selectIsLoggedIn } from "../../redux/auth/authSelectors";
 
 import { stylesForm } from "./StylesForm";
 
@@ -31,7 +34,6 @@ const initialFocus = {
 };
 
 export const RegistrationScreen = ({ navigation }) => {
-  console.log("navigate", navigation);
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isOnFocus, setIsOnFocus] = useState(initialFocus);
@@ -55,17 +57,25 @@ export const RegistrationScreen = ({ navigation }) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const onSignUp = () => {
-    console.log("hahaha");
+  const dispatch = useDispatch();
+
+  const onSignUp = async () => {
     if (!state.login || !state.email || !state.password) {
       return Alert.alert("You  should enter all the fields!");
     }
+
     setState(initialState);
-    // Alert.alert(
-    // `Login: ${state.login} \nemail: ${state.email} \npassword: ${state.password}`);
-    navigation.navigate("Home", { screen: "Posts" });
-    return;
+    navigation.navigate("Home");
+
+    await dispatch(registerUser(state)).then((response) => {
+      response.meta.requestStatus === "fulfilled" &&
+        navigation.navigate("Home", { screen: "Posts" });
+      response.meta.requestStatus !== "fulfilled" &&
+        alert("Your data is wrong");
+      console.log(response.meta.requestStatus);
+    });
   };
 
   const handleFocus = (key) => {
@@ -118,7 +128,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
                 </TouchableOpacity>
               </View>
-              <Text style={stylesForm.title}>Sign Up</Text>
+              <Text style={stylesForm.title}>Зареєструватися</Text>
               <View style={{ width: "100%" }}>
                 <TextInput
                   style={{
@@ -177,7 +187,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   onPress={() => handleShowPassword()}
                 >
                   <Text style={stylesForm.text}>
-                    {isShowPassword ? "Show" : "Hide"}
+                    {isShowPassword ? "Показати" : "Сховати"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -187,12 +197,12 @@ export const RegistrationScreen = ({ navigation }) => {
                 style={stylesForm.button}
                 onPress={onSignUp}
               >
-                <Text style={{ color: "#fff", lineHeight: 19 }}>Sign Up</Text>
+                <Text style={{ color: "#fff", lineHeight: 19 }}>
+                  Зареєструватися
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={stylesForm.text}>
-                  Already have an account? Log in
-                </Text>
+                <Text style={stylesForm.text}>Маєте акаунт? Увійти</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>

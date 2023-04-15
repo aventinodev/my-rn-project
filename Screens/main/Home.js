@@ -1,19 +1,30 @@
 import React from "react";
-
+import { useDispatch } from "react-redux";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { createStackNavigator } from "@react-navigation/stack";
+// import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
 
+import { CreatePostsScreen } from "./CreatePostsScreen";
 import { PostsScreen } from "./PostsScreen";
 import { ProfileScreen } from "./ProfileScreen";
-import { CreatePostsScreen } from "./CreatePostsScreen";
+
+import { logoutUser } from "../../redux/auth/authOperations";
 
 const MainTab = createBottomTabNavigator();
 
 export const Home = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  const logout = async () => {
+    await dispatch(logoutUser()).then((response) => {
+      response.meta.requestStatus === "fulfilled" &&
+        navigation.navigate("Login");
+    });
+  };
+
   return (
     <MainTab.Navigator
       initialRouteName="Login"
@@ -37,20 +48,13 @@ export const Home = ({ navigation }) => {
               style={styles.btn}
               onPress={() => navigation.navigate("Posts")}
             >
-              <AntDesign
-                name="appstore-o"
-                color="rgba(33, 33, 33, 0.8)"
-                size={24}
-              />
+              <AntDesign name="appstore-o" color={color} size={size} />
             </TouchableOpacity>
           ),
-          title: "Публикации",
+          title: "Публікації",
           headerRightContainerStyle: { paddingRight: 20 },
           headerRight: () => (
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => navigation.navigate("Login")}
-            >
+            <TouchableOpacity activeOpacity={0.5} onPress={logout}>
               <Feather name="log-out" size={24} color="rgba(33, 33, 33, 0.8)" />
             </TouchableOpacity>
           ),
@@ -69,7 +73,7 @@ export const Home = ({ navigation }) => {
               <AntDesign name="plus" size={24} color="white" />
             </TouchableOpacity>
           ),
-          title: "Создать публикацию",
+          title: "Створити публікацію",
           headerTitleAlign: "center",
           headerLeft: () => (
             <TouchableOpacity
@@ -94,7 +98,7 @@ export const Home = ({ navigation }) => {
               style={styles.btn}
               onPress={() => navigation.navigate("Profile")}
             >
-              <Feather name="user" color="rgba(33, 33, 33, 0.8)" size={24} />
+              <Feather name="user" color={color} size={size} />
             </TouchableOpacity>
           ),
         }}

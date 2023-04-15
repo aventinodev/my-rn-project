@@ -2,9 +2,9 @@ import React from "react";
 import { moduleName } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import DefaultScreenPosts from "../nested/DefaultPostsScreen";
-import CommentsScreen from "../nested/CommentsScreen";
-import MapScreen from "../nested/MapScreen";
+import { DefaultScreenPosts } from "../nested/DefaultPostsScreen";
+import { CommentsScreen } from "../nested/CommentsScreen";
+import { MapScreen } from "../nested/MapScreen";
 
 const NestedScreen = createStackNavigator();
 

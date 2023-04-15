@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
   ImageBackground,
   SafeAreaView,
@@ -11,11 +11,25 @@ import {
 } from "react-native";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { Post } from "../../Components/Post";
+import { Post } from "../../Components/Post.js";
 import { postsAll } from "../../assets/data.js";
+
+import { logoutUser } from "../../redux/auth/authOperations";
+import { selectName } from "../../redux/auth/authSelectors.js";
 
 export const ProfileScreen = ({ navigation }) => {
   const [posts, setPosts] = useState(postsAll);
+
+  const nameUser = useSelector(selectName);
+
+  const dispatch = useDispatch();
+
+  const logout = async () => {
+    await dispatch(logoutUser()).then((response) => {
+      response.meta.requestStatus === "fulfilled" &&
+        navigation.navigate("Login");
+    });
+  };
 
   return (
     <SafeAreaView>
@@ -24,10 +38,10 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.box}>
             <View style={styles.container}>
               <View style={styles.imageBox}>
-                <Image
-                  source={require("../../assets/images/avatar.jpg")}
+                <ImageBackground
+                  source={require("../../assets/images/avatar.png")}
                   style={styles.imageProfile}
-                ></Image>
+                ></ImageBackground>
                 <TouchableOpacity style={styles.btnRemoveImage}>
                   <AntDesign name="close" size={23} color="#BDBDBD" />
                 </TouchableOpacity>
@@ -35,13 +49,13 @@ export const ProfileScreen = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.logout}
                   activeOpacity={0.5}
-                  onPress={() => navigation.navigate("Login")}
+                  onPress={logout}
                 >
                   <Feather name="log-out" size={24} color="#BDBDBD" />
                 </TouchableOpacity>
               </View>
 
-              <Text style={styles.title}>Natali Romanova</Text>
+              <Text style={styles.title}>{nameUser}</Text>
             </View>
 
             {posts.map((item) => (
@@ -105,11 +119,11 @@ const styles = StyleSheet.create({
 
   logout: {
     top: -65,
-    left: 215,
+    left: 230,
   },
 
   title: {
-    // fontWeight: 500,
+    fontWeight: "500",
     fontSize: 30,
     marginBottom: 32,
   },

@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
 
   name: {
     color: "#212121",
-    fontWeight: "700",
+    // fontWeight: "700",
   },
 });

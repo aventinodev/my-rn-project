@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import { Camera } from "expo-camera";
-import * as MediaLibrary from "expo-media-library";
+// import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 
 import {
@@ -17,7 +19,8 @@ import {
 
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 
-// <Feather name="trash-2" size={24} color="black" />
+import { uploadPhoto, createPost } from "../../redux/posts/postsOperations";
+import { selectId } from "../../redux/auth/authSelectors";
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -26,7 +29,11 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [inputLocation, setInputLocation] = useState("");
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  // const [errorMsg, setErrorMsg] = useState(null);
+
+  const userId = useSelector(selectId);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -53,22 +60,21 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
-    const locationName = await Location.reverseGeocodeAsync(location);
-    console.log("locationName---->", locationName);
-    console.log("photo.uri---->", photo.uri);
-    // console.log("latitude", location.coords.latitude);
-    // console.log("longitude", location.coords.longitude);
+    const locationPhoto = await Location.reverseGeocodeAsync(location).then(
+      (response) => {
+        return response[0];
+      }
+    );
+    setInputLocation(locationPhoto[0].street);
     setPhoto(photo.uri);
-    setInputLocation(locationName[0].street);
-    console.log("locationInput---->", locationName[0].street);
   };
 
-  const createPosts = () => {
-    // if (!state.name || !state.location)
+  const createPosts = async () => {
+    // if (!title || !inputLocation || !photo) {
     //   Alert.alert("Please, enter all data");
     //   return;
     // }
-    navigation.navigate("DefaultScreen", [photo, title, inputLocation]);
+    navigation.navigate("DefaultScreen", { photo });
   };
 
   return (
@@ -108,9 +114,7 @@ export const CreatePostsScreen = ({ navigation }) => {
           style={styles.input}
           placeholder="Назва..."
           value={title}
-          onChangeText={(value) =>
-            setTitle((prevState) => ({ ...prevState, title: value }))
-          }
+          onChangeText={(value) => setTitle(value)}
           onFocus={() => setIsShowKeyboard(true)}
         />
 
@@ -124,12 +128,7 @@ export const CreatePostsScreen = ({ navigation }) => {
           <TextInput
             placeholder="Місцевість..."
             value={inputLocation}
-            onChangeText={(value) =>
-              setLocation((prevState) => ({
-                ...prevState,
-                inputLocation: value,
-              }))
-            }
+            onChangeText={(value) => setInputLocation(value)}
             onFocus={() => setIsShowKeyboard(true)}
           />
         </View>

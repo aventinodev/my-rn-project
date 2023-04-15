@@ -1,13 +1,13 @@
 import React from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 
-export default function Comment({ text, date, time }) {
+export const Comment = ({ text, date, time }) => {
   console.log(date);
   return (
     <View style={styles.item}>
       <Image
         style={styles.image}
-        source={require("../assets/images/profile3.png")}
+        source={require("../assets/images/avatar.png")}
       />
 
       <View style={styles.commentBox}>
@@ -18,7 +18,7 @@ export default function Comment({ text, date, time }) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   item: {
